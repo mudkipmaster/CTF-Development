@@ -1,0 +1,39 @@
+
+services:
+  player:
+    image: alpine:latest
+    container_name: player
+    entrypoint: sh
+    tty: true
+    environment:
+      - DOCKER_HOST=tcp://docker:2375
+    depends_on:
+      - docker
+    networks:
+      - challenge_net
+
+  docker:
+    image: docker:dind
+    container_name: docker_daemon
+    privileged: true
+    command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+    networks:
+      - challenge_net
+    volumes:
+      - docker_data:/var/lib/docker
+
+  target:
+    image: alpine:latest
+    container_name: target
+    command: sh -c "echo 'CTF{flag_in_target_container}' > /flag.txt && tail -f /dev/null"
+    networks:
+      - challenge_net
+    depends_on:
+      - docker
+
+volumes:
+  docker_data:
+
+networks:
+  challenge_net:
+    driver: bridge
