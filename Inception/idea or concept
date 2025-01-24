@@ -1,0 +1,1 @@
+This would be a layered docker escape challenge with multiple docker containers running within each other MEANING that each of them would contain the necessity to run the container.
