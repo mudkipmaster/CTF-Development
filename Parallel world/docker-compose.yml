@@ -16,7 +16,7 @@ services:
     image: docker:dind
     container_name: docker_daemon
     privileged: true
-    command: ["--host=tcp://0.0.0.0:2375" , "--host=unix:///var/run/docker.sock"]+
+    command: ["--host=tcp://0.0.0.0:2375" , "--host=unix:///var/run/docker.sock"]
     networks:
       - challenge_net
     volumes:
