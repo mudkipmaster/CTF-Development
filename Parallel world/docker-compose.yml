@@ -1,4 +1,4 @@
-
+version: '3.8'
 services:
   player:
     image: alpine:latest
@@ -6,7 +6,7 @@ services:
     entrypoint: sh
     tty: true
     environment:
-      - DOCKER_HOST=tcp://docker:2375
+      DOCKER_HOST: tcp://docker:2375
     depends_on:
       - docker
     networks:
@@ -16,7 +16,7 @@ services:
     image: docker:dind
     container_name: docker_daemon
     privileged: true
-    command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+    command: ["--host=tcp://0.0.0.0:2375" , "--host=unix:///var/run/docker.sock"]+
     networks:
       - challenge_net
     volumes:
