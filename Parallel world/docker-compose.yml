@@ -1,35 +1,54 @@
 version: '3.8'
 services:
-  player:
-    image: alpine:latest
-    container_name: player
-    entrypoint: sh
-    tty: true
-    environment:
-      DOCKER_HOST: tcp://docker:2375
-    depends_on:
-      - docker
-    networks:
-      - challenge_net
-
   docker:
     image: docker:dind
     container_name: docker_daemon
     privileged: true
-    command: ["--host=tcp://0.0.0.0:2375" , "--host=unix:///var/run/docker.sock"]
+    command: [
+      "--host=tcp://0.0.0.0:2375",
+      "--host=unix:///var/run/docker.sock",
+      "--tls=false",
+      #"--tlscacert=/certs/ca.pem",
+      #"--tlscert=/certs/server-cert.pem",
+      #"--tlskey=/certs/server-key.pem"
+    ]
+    environment:
+      DOCKER_TLS_VERIFY: ""
     networks:
       - challenge_net
     volumes:
       - docker_data:/var/lib/docker
+    #  - ./certs:/certs # Mount TLS certificates
+
+  player:
+    image: docker:dind  # Using dind to get a Docker client
+    container_name: player
+    privileged: true
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_TLS_VERIFY: ""
+    #  DOCKER_CERT_PATH: "/certs"
+    depends_on:
+      - docker
+    networks:
+      - challenge_net
+    #volumes:
+    #  - ./certs:/certs # Mount the same certificates
 
   target:
     image: alpine:latest
     container_name: target
-    command: sh -c "echo 'CTF{flag_in_target_container}' > /flag.txt && tail -f /dev/null"
+    command: sh -c "echo 'ISTS{ENTERED_EAST_DESERT}' > /flag.txt && tail -f /dev/null"
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      DOCKER_TLS_VERIFY: ""
+    #  DOCKER_CERT_PATH: "/certs"
     networks:
       - challenge_net
     depends_on:
       - docker
+    #volumes:
+    #  - ./certs:/certs
 
 volumes:
   docker_data:
