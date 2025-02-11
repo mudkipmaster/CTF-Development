@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /home/challenge/
 
-COPY [C:\Users\19146\Desktop\WICYS Dev\easyPWNists: Format String\problem] /home/challenge/
-COPY [C:\Users\19146\Desktop\WICYS Dev\easyPWNists: Format String\Flag.txt] /home/challenge/
+COPY [/home/mudwit/Desktop/DEVCTF/BadWithNames/BadWithNames] /home/challenge/
+COPY [/home/mudwit/Desktop/DEVCTF/BadWithNames/flag.txt] /home/challenge/
 
 RUN chmod +x problem
 COPY xinetd_config /etc/xinted.d/challenge
