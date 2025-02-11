@@ -1,17 +1,16 @@
 FROM ubuntu:20.04
 
-RUN apt-get update && apt-get install -y \
-    xinetd \
-    useradd -m -d /home/challenge -s /bin/bash challenge
+RUN apt-get update && apt-get install -y xinetd \
+    && useradd -m -d /home/challenge -s /bin/bash challenge
 
 
 WORKDIR /home/challenge/
 
-COPY [/home/mudwit/Desktop/DEVCTF/BadWithNames/BadWithNames] /home/challenge/
-COPY [/home/mudwit/Desktop/DEVCTF/BadWithNames/flag.txt] /home/challenge/
+COPY ["NameProblem" , "/home/challenge/"]
+COPY ["flag.txt", "/home/challenge/"]
 
-RUN chmod +x problem
-COPY xinetd_config /etc/xinted.d/challenge
+RUN chmod +x NameProblem
+COPY xinetd_config.d /etc/xinted.d/challenge
 
 EXPOSE 4569
 

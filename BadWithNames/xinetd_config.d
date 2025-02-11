@@ -5,7 +5,7 @@ service challenge
     protocol        = tcp
     wait            = no
     user            = root
-    server          = /home/challenge/problem
+    server          = /home/challenge/NameProblem
     type            = UNLISTED
     port            = 4569
     bind            = 127.0.0.1
