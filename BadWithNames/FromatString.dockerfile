@@ -1,24 +1,21 @@
-FROM ubuntu:20.04
+# Use a minimal base image
+FROM debian:latest
 
-RUN apt-get update && apt-get install -y xinetd \
-    && useradd -m -d /home/challenge -s /bin/bash challenge
+# Install necessary packages
+RUN apt-get update && apt-get install -y socat && rm -rf /var/lib/apt/lists/*
 
+# Create a non-root user with restricted permissions
+RUN useradd -m -s /bin/bash ctfuser
 
-WORKDIR /home/challenge/
+# Set up working directory
+WORKDIR /home/ctfuser
 
-COPY ["NameProblem" , "/home/challenge/"]
-COPY ["flag.txt", "/home/challenge/"]
+# Copy the binary into the container and set correct permissions
+COPY industry-guidelines /home/ctfuser/industry-guidelines
+RUN chmod 555 /home/ctfuser/industry-guidelines && chown -R ctfuser:ctfuser /home/ctfuser
 
-RUN chmod +x NameProblem
-COPY xinetd_config.d /etc/xinted.d/challenge
+# Expose port
+EXPOSE 1337
 
-EXPOSE 4569
-
-# Set ownership of the files to the "challenge" user
-RUN chown -R challenge:challenge /home/challenge
-
-# Run xinetd as a service to handle incoming connections, with user `challenge`
-USER challenge
-
-# Start xinetd service to run your pwn service
-CMD ["/usr/sbin/xinetd", "-dontfork"]
+# Run socat to serve the binary
+CMD su ctfuser -c "socat TCP-LISTEN:1337,reuseaddr,fork EXEC:/home/ctfuser/industry-guidelines"
