@@ -11,11 +11,12 @@ RUN useradd -m -s /bin/bash ctfuser
 WORKDIR /home/ctfuser
 
 # Copy the binary into the container and set correct permissions
-COPY industry-guidelines /home/ctfuser/industry-guidelines
-RUN chmod 555 /home/ctfuser/industry-guidelines && chown -R ctfuser:ctfuser /home/ctfuser
+COPY BadWithNames /home/ctfuser/BadWithNames
+COPY flag.txt /home/ctfuser/flag.txt
+RUN chmod 555 /home/ctfuser/BadWithNames && chown -R ctfuser:ctfuser /home/ctfuser
 
 # Expose port
 EXPOSE 1337
 
 # Run socat to serve the binary
-CMD su ctfuser -c "socat TCP-LISTEN:1337,reuseaddr,fork EXEC:/home/ctfuser/industry-guidelines"
+CMD su ctfuser -c "socat TCP-LISTEN:1337,reuseaddr,fork EXEC:/home/ctfuser/BadWithNames" 
