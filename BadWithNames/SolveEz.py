@@ -1,6 +1,7 @@
 from pwn import *
 
-p = process("./BadWithNames")
+#p = process("./BadWithNames")
+p = remote("127.0.0.1", 1337)
 #gdb.attach(p, 
 #'''b * vuln + 155
 #b * vuln + 249
